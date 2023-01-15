@@ -12,10 +12,10 @@ const Admin = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-5 ">
+    <div className="flex flex-col justify-center items-center">
       <Modal modal={modal} setModal={setModal} nameModal={nameModal} optionModal={optionModal} />
-      <h1 className="text-3xl text-indigo-600 font-bold drop-shadow-md ">Админ панель</h1>
-      <div className="flex flex-col justify-center items-center gap-2 mt-8">
+      <h1 className="text-center font-bold text-black text-2xl my-10">Админ панель</h1>
+      <div className="flex flex-col justify-center items-center gap-2">
         <button
           className="p-3 w-fit rounded-xl bg-indigo-600 text-gray-50 drop-shadow-sm"
           onClick={() => onClickModal({ name: 'Добавить девайс', option: 'device' })}>

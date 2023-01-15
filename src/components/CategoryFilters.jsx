@@ -144,7 +144,7 @@ export default function CategoryFilters() {
         </Transition.Root>
 
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pt-24 pb-6">
+          <div className="flex items-baseline justify-between border-b border-gray-200 pt-6 pb-6">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
 
             <div className="flex items-center">

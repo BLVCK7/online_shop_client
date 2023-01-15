@@ -29,9 +29,9 @@ const products = [
 
 const Basket = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-10">
       <h1 className="text-center font-bold text-black text-2xl my-10">Корзина товаров</h1>
-      <div className="px-60 my-5">
+      <div className="md:px-60 md:mt-5">
         <ul role="list" className="-my-6 divide-y divide-gray-200">
           {products.map((product) => (
             <li key={product.id} className="flex py-6">
@@ -70,7 +70,7 @@ const Basket = () => {
         </ul>
       </div>
 
-      <div className=" px-60 mt-5">
+      <div className="mt-8 md:px-60 md:mt-5">
         <div className="flex justify-between text-base font-medium text-gray-900">
           <p>Сумма</p>
           <p>$262.00</p>

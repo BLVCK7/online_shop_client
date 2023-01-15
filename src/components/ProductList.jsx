@@ -87,8 +87,8 @@ const products = [
 export default function ProductList() {
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-2xl py-16 px-4 sm:pb-24 sm:pt-2 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+      <div className="mx-auto max-w-2xl pb-16 px-4 sm:pb-24 sm:pt-2 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 text-center md:text-left">
           Customers also purchased
         </h2>
 
