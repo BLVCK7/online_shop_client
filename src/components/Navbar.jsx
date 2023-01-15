@@ -1,17 +1,10 @@
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import {
-  ArrowPathIcon,
   Bars3Icon,
-  BookmarkSquareIcon,
-  CalendarIcon,
   ChartBarIcon,
   CursorArrowRaysIcon,
-  LifebuoyIcon,
-  PhoneIcon,
-  PlayIcon,
   ShieldCheckIcon,
-  Squares2X2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
@@ -93,7 +86,6 @@ export default function Navbar() {
                       aria-hidden="true"
                     />
                   </Popover.Button>
-
                   <Transition
                     as={Fragment}
                     enter="transition ease-out duration-200"
@@ -128,6 +120,7 @@ export default function Navbar() {
               )}
             </Popover>
           </Popover.Group>
+
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
             <Link
               to={LOGIN_ROUTE}
