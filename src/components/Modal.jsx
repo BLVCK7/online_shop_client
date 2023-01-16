@@ -1,10 +1,49 @@
+import React from 'react';
 import { Fragment, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import DeviceForm from './DeviceForm';
 import SingleForm from './SingleForm';
+import { postTypes } from '../http/typeAPI';
+import { postBrand } from '../http/brandAPI';
+import { postDevices } from '../http/deviceAPI';
+import { useSelector } from 'react-redux';
 
 export default function Modal({ modal, setModal, nameModal, optionModal }) {
   const cancelButtonRef = useRef(null);
+  const { type } = useSelector((state) => state.typeReducer);
+  const { brand } = useSelector((state) => state.brandReducer);
+
+  const [newOption, setNewOption] = React.useState('');
+
+  const [name, setName] = React.useState('');
+  const [price, setPrice] = React.useState(0);
+  const [brandId, setBrandId] = React.useState(brand[0]);
+  const [typeId, setTypeId] = React.useState(type[0]);
+  const [file, setFile] = React.useState(null);
+  const [info, setInfo] = React.useState([]);
+
+  const changeInfo = (key, value) => {
+    setInfo({ ...info, [key]: value });
+  };
+
+  const onSubmit = () => {
+    if (nameModal === 'Добавить категорию') {
+      postTypes(newOption);
+    } else if (nameModal === 'Добавить бренд') {
+      postBrand(newOption);
+    } else if (optionModal === 'device') {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('price', price);
+      formData.append('img', file);
+      formData.append('brandId', brandId.id);
+      formData.append('typeId', typeId.id);
+      formData.append('info', JSON.stringify(Array(info)));
+      postDevices(formData);
+      console.log(formData);
+    }
+    setModal(false);
+  };
 
   return (
     <Transition.Root show={modal} as={Fragment}>
@@ -33,13 +72,31 @@ export default function Modal({ modal, setModal, nameModal, optionModal }) {
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <h1 className="text-center font-bold text-lg">{nameModal}</h1>
-                  {optionModal === 'single' ? <SingleForm /> : <DeviceForm />}
+                  {optionModal === 'single' ? (
+                    <SingleForm newOption={newOption} setNewOption={setNewOption} />
+                  ) : (
+                    <DeviceForm
+                      name={name}
+                      setName={setName}
+                      price={price}
+                      setPrice={setPrice}
+                      brandId={brandId}
+                      setBrandId={setBrandId}
+                      typeId={typeId}
+                      setTypeId={setTypeId}
+                      file={file}
+                      setFile={setFile}
+                      info={info}
+                      setInfo={setInfo}
+                      changeInfo={changeInfo}
+                    />
+                  )}
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={() => setModal(false)}>
+                    onClick={onSubmit}>
                     Отправить
                   </button>
                   <button

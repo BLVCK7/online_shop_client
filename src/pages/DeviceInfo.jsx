@@ -1,27 +1,11 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    theme: {
-      extend: {
-        gridTemplateRows: {
-          '[auto,auto,1fr]': 'auto auto 1fr',
-        },
-      },
-    },
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
+import React from 'react';
 import { useState } from 'react';
 import { StarIcon } from '@heroicons/react/20/solid';
 import { RadioGroup } from '@headlessui/react';
+import { Link, useParams } from 'react-router-dom';
+import { getOneDevice } from '../http/deviceAPI';
+import { useDispatch, useSelector } from 'react-redux';
+import { DeviceSlice } from '../redux/reducers/DeviceSlice';
 
 const product = {
   name: 'Basic Tee 6-Pack',
@@ -83,7 +67,16 @@ function classNames(...classes) {
 
 export default function DeviceInfo() {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { setOneDevice } = DeviceSlice.actions;
+  const { device } = useSelector((state) => state.deviceReducer);
+
+  React.useEffect(() => {
+    getOneDevice(params.id).then((data) => dispatch(setOneDevice(data)));
+  }, []);
+
+  console.log(device);
 
   return (
     <div className="bg-white">
@@ -92,32 +85,26 @@ export default function DeviceInfo() {
           <ol
             role="list"
             className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            {product.breadcrumbs.map((breadcrumb) => (
-              <li key={breadcrumb.id}>
-                <div className="flex items-center">
-                  <a href={breadcrumb.href} className="mr-2 text-sm font-medium text-gray-900">
-                    {breadcrumb.name}
-                  </a>
-                  <svg
-                    width={16}
-                    height={20}
-                    viewBox="0 0 16 20"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    className="h-5 w-4 text-gray-300">
-                    <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                  </svg>
-                </div>
-              </li>
-            ))}
+            <li>
+              <div className="flex items-center">
+                <a href="#" className="mr-2 text-sm font-medium text-gray-900">
+                  Category
+                </a>
+                <svg
+                  width={16}
+                  height={20}
+                  viewBox="0 0 16 20"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  className="h-5 w-4 text-gray-300">
+                  <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+                </svg>
+              </div>
+            </li>
+
             <li className="text-sm">
-              <a
-                href={product.href}
-                aria-current="page"
-                className="font-medium text-gray-500 hover:text-gray-600">
-                {product.name}
-              </a>
+              <span className="font-medium text-gray-500 hover:text-gray-600">{device.name}</span>
             </li>
           </ol>
         </nav>
@@ -126,8 +113,8 @@ export default function DeviceInfo() {
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
           <div className="aspect-w-3 aspect-h-4 overflow-hidden rounded-lg lg:block">
             <img
-              src={product.images[0].src}
-              alt={product.images[0].alt}
+              src={process.env.REACT_APP_API_URL + device.img}
+              alt={device.img}
               className="h-full w-full object-cover object-center"
             />
           </div>
@@ -137,14 +124,14 @@ export default function DeviceInfo() {
         <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
           <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
             <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-              {product.name}
+              {device.name}
             </h1>
           </div>
 
           {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
-            <p className="text-3xl tracking-tight text-gray-900">{product.price}</p>
+            <p className="text-3xl tracking-tight text-gray-900">{'$' + device.price}</p>
 
             {/* Reviews */}
             <div className="mt-6">
@@ -232,14 +219,6 @@ export default function DeviceInfo() {
                     </li>
                   ))}
                 </ul>
-              </div>
-            </div>
-
-            <div className="mt-10">
-              <h2 className="text-sm font-medium text-gray-900">Details</h2>
-
-              <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{product.details}</p>
               </div>
             </div>
           </div>
