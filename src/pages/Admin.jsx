@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from '../components/Modal';
+import AdminAddModal from '../components/AdminAddModal';
 
 const Admin = () => {
   const [modal, setModal] = React.useState(false);
@@ -13,7 +13,12 @@ const Admin = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <Modal modal={modal} setModal={setModal} nameModal={nameModal} optionModal={optionModal} />
+      <AdminAddModal
+        modal={modal}
+        setModal={setModal}
+        nameModal={nameModal}
+        optionModal={optionModal}
+      />
       <h1 className="text-center font-bold text-black text-2xl my-10">Админ панель</h1>
       <div className="flex flex-col justify-center items-center gap-2">
         <button

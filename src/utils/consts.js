@@ -5,3 +5,10 @@ export const SHOP_ROUTE = '/';
 export const DEVICE_ROUTE = 'device';
 export const BASKET_ROUTE = 'basket';
 export const CATEGORY_ROUTE = 'category';
+
+export const sortOptions = [
+  { name: 'Сначала популярные' },
+  { name: 'Сначала новые' },
+  { name: 'Сначала дешевле' },
+  { name: 'Сначала дороже' },
+];

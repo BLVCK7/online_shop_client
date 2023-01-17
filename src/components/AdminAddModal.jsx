@@ -1,14 +1,15 @@
 import React from 'react';
 import { Fragment, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import DeviceForm from './DeviceForm';
-import SingleForm from './SingleForm';
+import DeviceForm from './modal_forms/DeviceForm';
+import SingleForm from './modal_forms/SingleForm';
 import { postTypes } from '../http/typeAPI';
 import { postBrand } from '../http/brandAPI';
 import { postDevices } from '../http/deviceAPI';
 import { useSelector } from 'react-redux';
+import SuccessModal from './SuccessModal';
 
-export default function Modal({ modal, setModal, nameModal, optionModal }) {
+export default function AdminAddModal({ modal, setModal, nameModal, optionModal }) {
   const cancelButtonRef = useRef(null);
   const { type } = useSelector((state) => state.typeReducer);
   const { brand } = useSelector((state) => state.brandReducer);
@@ -32,15 +33,20 @@ export default function Modal({ modal, setModal, nameModal, optionModal }) {
     } else if (nameModal === 'Добавить бренд') {
       postBrand(newOption);
     } else if (optionModal === 'device') {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('price', price);
-      formData.append('img', file);
-      formData.append('brandId', brandId.id);
-      formData.append('typeId', typeId.id);
-      formData.append('info', JSON.stringify(Array(info)));
-      postDevices(formData);
-      console.log(formData);
+      try {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('price', price);
+        formData.append('img', file);
+        formData.append('brandId', brandId.id);
+        formData.append('typeId', typeId.id);
+        formData.append('info', JSON.stringify(Array(info)));
+        postDevices(formData);
+      } catch (error) {
+        alert('Ошибка при создании товара', console.error(error));
+      } finally {
+        alert('Вы успешно добавили товар');
+      }
     }
     setModal(false);
   };
