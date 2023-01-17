@@ -1,19 +1,18 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getDevices } from '../http/deviceAPI';
-import { DeviceSlice } from '../redux/reducers/DeviceSlice';
+import { setDivicesThunk } from '../redux/reducers/DeviceSlice';
 
 export default function ProductList() {
   const dispatch = useDispatch();
-  const { setDevices } = DeviceSlice.actions;
-  const { allDevices, isLoading } = useSelector((state) => state.deviceReducer);
+  const { allDevices, status } = useSelector((state) => state.deviceReducer);
 
   React.useEffect(() => {
-    getDevices().then((data) => dispatch(setDevices(data.rows)));
+    dispatch(setDivicesThunk());
   }, []);
 
-  if (isLoading) return <div className="flex justify-center items-center m-auto">Loading...</div>;
+  if (status === 'loading')
+    return <div className="flex justify-center items-center m-auto">Loading...</div>;
 
   return (
     <div className="bg-white">
@@ -24,7 +23,7 @@ export default function ProductList() {
 
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {allDevices.map((product) => (
-            <Link key={product.id} to={'device/' + product.id}>
+            <Link reloadDocument key={product.id} to={'device/' + product.id}>
               <div className="group relative">
                 <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80">
                   <img

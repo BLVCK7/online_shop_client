@@ -76,9 +76,7 @@ export default function Shop() {
                     <ul role="list" className="px-2 py-3 font-medium text-gray-900">
                       {type.map((category) => (
                         <li key={category.id}>
-                          <Link to={'category/' + category.id} className="block px-2 py-3">
-                            {category.name}
-                          </Link>
+                          <span className="block px-2 py-3">{category.name}</span>
                         </li>
                       ))}
                     </ul>
@@ -204,7 +202,7 @@ export default function Shop() {
                   className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
                   {type.map((category) => (
                     <li key={category.id}>
-                      <Link to={'category/' + category.id}>{category.name}</Link>
+                      <span>{category.name}</span>
                     </li>
                   ))}
                 </ul>

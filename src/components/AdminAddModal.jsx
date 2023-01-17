@@ -7,7 +7,7 @@ import { postTypes } from '../http/typeAPI';
 import { postBrand } from '../http/brandAPI';
 import { postDevices } from '../http/deviceAPI';
 import { useSelector } from 'react-redux';
-import SuccessModal from './SuccessModal';
+import TableForm from './modal_forms/TableForm';
 
 export default function AdminAddModal({ modal, setModal, nameModal, optionModal }) {
   const cancelButtonRef = useRef(null);
@@ -80,6 +80,8 @@ export default function AdminAddModal({ modal, setModal, nameModal, optionModal 
                   <h1 className="text-center font-bold text-lg">{nameModal}</h1>
                   {optionModal === 'single' ? (
                     <SingleForm newOption={newOption} setNewOption={setNewOption} />
+                  ) : optionModal === 'table' ? (
+                    <TableForm />
                   ) : (
                     <DeviceForm
                       name={name}
