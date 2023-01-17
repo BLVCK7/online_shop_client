@@ -8,6 +8,7 @@ import { postBrand } from '../http/brandAPI';
 import { postDevices } from '../http/deviceAPI';
 import { useSelector } from 'react-redux';
 import TableForm from './modal_forms/TableForm';
+import EditForm from './modal_forms/EditForm';
 
 export default function AdminAddModal({ modal, setModal, nameModal, optionModal }) {
   const cancelButtonRef = useRef(null);
@@ -82,6 +83,22 @@ export default function AdminAddModal({ modal, setModal, nameModal, optionModal 
                     <SingleForm newOption={newOption} setNewOption={setNewOption} />
                   ) : optionModal === 'table' ? (
                     <TableForm />
+                  ) : optionModal === 'edit' ? (
+                    <EditForm
+                      name={name}
+                      setName={setName}
+                      price={price}
+                      setPrice={setPrice}
+                      brandId={brandId}
+                      setBrandId={setBrandId}
+                      typeId={typeId}
+                      setTypeId={setTypeId}
+                      file={file}
+                      setFile={setFile}
+                      info={info}
+                      setInfo={setInfo}
+                      changeInfo={changeInfo}
+                    />
                   ) : (
                     <DeviceForm
                       name={name}

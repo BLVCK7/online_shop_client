@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getDevices, getOneDevice } from '../../http/deviceAPI';
+import { getAdminDeviceInfo, getDevices, getOneDevice } from '../../http/deviceAPI';
 
 export const setDivicesThunk = createAsyncThunk('device/setDivicesThunk', async (_, thunkAPI) => {
   try {
@@ -21,10 +21,24 @@ export const setDeviceInfoThunk = createAsyncThunk('device/setDeviceInfoThunk', 
   }
 });
 
+export const setAdminDeviceInfoEditThunk = createAsyncThunk(
+  'device/setAdminDeviceInfoEditThunk',
+  async (name) => {
+    try {
+      const response = await getAdminDeviceInfo(name);
+
+      return response;
+    } catch (error) {
+      alert(error.response?.data?.message);
+    }
+  },
+);
+
 const initialState = {
   allDevices: [],
   device: [],
   status: 'loading',
+  editDevice: [],
 };
 
 export const DeviceSlice = createSlice({
@@ -54,6 +68,18 @@ export const DeviceSlice = createSlice({
     },
     [setDeviceInfoThunk.rejected]: (state) => {
       state.device = null;
+      state.status = 'error';
+    },
+    // setAdminDeviceInfoEditThunk
+    [setAdminDeviceInfoEditThunk.pending]: (state) => {
+      state.status = 'loading';
+    },
+    [setAdminDeviceInfoEditThunk.fulfilled]: (state, action) => {
+      state.editDevice = action.payload;
+      state.status = 'loaded';
+    },
+    [setAdminDeviceInfoEditThunk.rejected]: (state) => {
+      state.editDevice = null;
       state.status = 'error';
     },
   },

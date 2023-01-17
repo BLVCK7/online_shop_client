@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import AdminAddModal from '../components/AdminAddModal';
+import { setDivicesThunk } from '../redux/reducers/DeviceSlice';
 import { setAllUsersThunk } from '../redux/reducers/UserSlice';
 
 const Admin = () => {
@@ -22,6 +23,13 @@ const Admin = () => {
     setOptionModal(option);
   };
 
+  const onClickEditUsers = ({ name, option }) => {
+    dispatch(setDivicesThunk());
+    setModal((prev) => !prev);
+    setNameModal(name);
+    setOptionModal(option);
+  };
+
   return (
     <div className="flex flex-col justify-center items-center">
       <AdminAddModal
@@ -36,6 +44,11 @@ const Admin = () => {
           className="p-3 w-fit rounded-xl bg-indigo-600 text-gray-50 drop-shadow-sm"
           onClick={() => onClickModal({ name: 'Добавить товар', option: 'device' })}>
           Добавить товар
+        </button>
+        <button
+          className="p-3 w-fit rounded-xl bg-indigo-600 text-gray-50 drop-shadow-sm"
+          onClick={() => onClickEditUsers({ name: 'Изменить товар', option: 'edit' })}>
+          Изменить товар
         </button>
         <button
           className="p-3 w-fit rounded-xl bg-indigo-600 text-gray-50 drop-shadow-sm"
