@@ -15,7 +15,7 @@ export default function TableForm() {
           <div>
             <h1>id</h1>
             {allUsers.users.map((user) => (
-              <div className="flex flex-col">
+              <div key={user.id} className="flex flex-col">
                 <span>{user.id}</span>
               </div>
             ))}
@@ -23,7 +23,7 @@ export default function TableForm() {
           <div>
             <h1>email</h1>
             {allUsers.users.map((user) => (
-              <div className="flex flex-col">
+              <div key={user.id} className="flex flex-col">
                 <span>{user.email}</span>
               </div>
             ))}
@@ -31,7 +31,7 @@ export default function TableForm() {
           <div>
             <h1>role</h1>
             {allUsers.users.map((user) => (
-              <div className="flex flex-col">
+              <div key={user.id} className="flex flex-col">
                 <span>{user.role}</span>
               </div>
             ))}

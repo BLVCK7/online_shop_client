@@ -24,9 +24,13 @@ export default function AdminAddModal({ modal, setModal, nameModal, optionModal 
   const [file, setFile] = React.useState(null);
   const [info, setInfo] = React.useState([]);
 
+  const { editDevice } = useSelector((state) => state.deviceReducer);
+
   const changeInfo = (key, value) => {
     setInfo({ ...info, [key]: value });
   };
+
+  console.log({ name, price, file, brandId, typeId, info });
 
   const onSubmit = () => {
     if (nameModal === 'Добавить категорию') {
@@ -36,6 +40,7 @@ export default function AdminAddModal({ modal, setModal, nameModal, optionModal 
     } else if (optionModal === 'device') {
       try {
         const formData = new FormData();
+        // formData.append('deviceId', editDevice.id); // добавить в UPDATE
         formData.append('name', name);
         formData.append('price', price);
         formData.append('img', file);

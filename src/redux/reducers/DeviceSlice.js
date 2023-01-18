@@ -44,7 +44,11 @@ const initialState = {
 export const DeviceSlice = createSlice({
   name: 'device',
   initialState,
-  reducers: {},
+  reducers: {
+    // setNameAction(state, action) {
+    //   state.editDevice = action.payload;
+    // },
+  },
   extraReducers: {
     // setDivicesThunk
     [setDivicesThunk.pending]: (state) => {

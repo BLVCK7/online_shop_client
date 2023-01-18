@@ -19,13 +19,19 @@ export default function EditForm({
   const { type } = useSelector((state) => state.typeReducer);
   const { brand } = useSelector((state) => state.brandReducer);
   const { allDevices, editDevice } = useSelector((state) => state.deviceReducer);
+  const [onChangeInfo, setOnChangeInfo] = React.useState(false);
+  const [onChangeName, setOnChangeName] = React.useState(false);
+  const [onChangePrice, setOnChangePrice] = React.useState(false);
+  const [onChangeBrand, setOnChangeBrand] = React.useState(false);
+  const [onChangeType, setOnChangeType] = React.useState(false);
   const dispatch = useDispatch();
 
-  const [deviceName, setDeviceName] = React.useState(allDevices[0].name);
+  const toogleChangeInfo = (str, e) => {
+    setOnChangeInfo(true);
+    changeInfo(str, e.target.value);
+  };
 
   console.log(editDevice);
-
-  console.log(deviceName);
 
   return (
     <>
@@ -40,7 +46,14 @@ export default function EditForm({
                       Название товара
                     </label>
                     <select
-                      onChange={(e) => dispatch(setAdminDeviceInfoEditThunk(e.target.value))}
+                      onChange={(e) => {
+                        setOnChangeInfo(false);
+                        setOnChangeName(false);
+                        setOnChangePrice(false);
+                        setOnChangeBrand(false);
+                        setOnChangeType(false);
+                        dispatch(setAdminDeviceInfoEditThunk(e.target.value));
+                      }}
                       id="deviceName"
                       name="deviceName"
                       className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
@@ -53,7 +66,7 @@ export default function EditForm({
                   </div>
                 </div>
                 {editDevice.map((obj) => (
-                  <div key={obj.id} className="grid grid-cols-6 gap-6">
+                  <div className="grid grid-cols-6 gap-6" key={obj.id}>
                     <div className="col-span-6 sm:col-span-4">
                       <label
                         htmlFor="email-address"
@@ -61,8 +74,11 @@ export default function EditForm({
                         Название товара
                       </label>
                       <input
-                        value={obj.name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={onChangeName ? name : obj.name}
+                        onChange={(e) => {
+                          setOnChangeName(true);
+                          setName(e.target.value);
+                        }}
                         type="text"
                         name="name"
                         id="name"
@@ -76,8 +92,9 @@ export default function EditForm({
                         Тип
                       </label>
                       <select
-                        value={typeId.name}
+                        value={onChangeType ? type.name : obj.type.name}
                         onChange={(e) => {
+                          setOnChangeType(true);
                           let findId = type.find((obj) => obj.name === e.target.value);
                           setTypeId(findId);
                         }}
@@ -95,8 +112,9 @@ export default function EditForm({
                         Бренд
                       </label>
                       <select
-                        value={brandId.name}
+                        value={onChangeBrand ? brand.name : obj.brand.name}
                         onChange={(e) => {
+                          setOnChangeBrand(true);
                           let findId = brand.find((obj) => obj.name === e.target.value);
                           setBrandId(findId);
                         }}
@@ -108,51 +126,106 @@ export default function EditForm({
                         ))}
                       </select>
                     </div>
+                    {obj.info.length > 0 ? (
+                      obj.info.map((infoObj) => (
+                        <div key={infoObj.id} className="col-span-6 sm:col-span-6">
+                          <div>
+                            <label
+                              htmlFor="about"
+                              className="block text-sm font-medium text-gray-700">
+                              Описание товара
+                            </label>
+                            <div className="mt-1">
+                              <textarea
+                                value={
+                                  onChangeInfo ? Object.values(info)?.[0] : infoObj.description
+                                }
+                                onChange={(e) => toogleChangeInfo('description', e)}
+                                id="description"
+                                name="description"
+                                rows={3}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                placeholder="Расскажите о товаре..."
+                              />
+                            </div>
+                            <p className="mt-2 text-sm text-gray-500">
+                              Расскажите о продукте, который вы хотите добавить
+                            </p>
+                          </div>
 
-                    <div className="col-span-6 sm:col-span-6">
-                      <label htmlFor="about" className="block text-sm font-medium text-gray-700">
-                        Описание товара
-                      </label>
-                      <div className="mt-1">
-                        <textarea
-                          value={info.description}
-                          onChange={(e) => changeInfo('description', e.target.value)}
-                          id="description"
-                          name="description"
-                          rows={3}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          placeholder="Расскажите о товаре..."
-                        />
-                      </div>
-                      <p className="mt-2 text-sm text-gray-500">
-                        Расскажите о продукте, который вы хотите добавить
-                      </p>
-                    </div>
+                          <div className="col-span-6 sm:col-span-6">
+                            <label
+                              htmlFor="about"
+                              className="block text-sm font-medium text-gray-700">
+                              Преимущества
+                            </label>
+                            <div className="mt-1">
+                              <textarea
+                                value={onChangeInfo ? Object.values(info)?.[1] : infoObj.highlights}
+                                onChange={(e) => toogleChangeInfo('highlights', e)}
+                                id="highlights"
+                                name="highlights"
+                                rows={3}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                placeholder="Какие преимущества есть у товара?"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <>
+                        <div className="col-span-6 sm:col-span-6">
+                          <label
+                            htmlFor="about"
+                            className="block text-sm font-medium text-gray-700">
+                            Описание товара
+                          </label>
+                          <div className="mt-1">
+                            <textarea
+                              onChange={(e) => changeInfo('description', e.target.value)}
+                              id="description"
+                              name="description"
+                              rows={3}
+                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              placeholder="Расскажите о товаре..."
+                            />
+                          </div>
+                          <p className="mt-2 text-sm text-gray-500">
+                            Расскажите о продукте, который вы хотите добавить
+                          </p>
+                        </div>
 
-                    <div className="col-span-6 sm:col-span-6">
-                      <label htmlFor="about" className="block text-sm font-medium text-gray-700">
-                        Преимущества
-                      </label>
-                      <div className="mt-1">
-                        <textarea
-                          value={info.highlights}
-                          onChange={(e) => changeInfo('highlights', e.target.value)}
-                          id="highlights"
-                          name="highlights"
-                          rows={3}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          placeholder="Какие преимущества есть у товара?"
-                        />
-                      </div>
-                    </div>
+                        <div className="col-span-6 sm:col-span-6">
+                          <label
+                            htmlFor="about"
+                            className="block text-sm font-medium text-gray-700">
+                            Преимущества
+                          </label>
+                          <div className="mt-1">
+                            <textarea
+                              onChange={(e) => changeInfo('highlights', e.target.value)}
+                              id="highlights"
+                              name="highlights"
+                              rows={3}
+                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              placeholder="Какие преимущества есть у товара?"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
 
                     <div className="col-span-6 sm:col-span-6 lg:col-span-2">
                       <label htmlFor="city" className="block text-sm font-medium text-gray-700">
                         Цена
                       </label>
                       <input
-                        value={obj.price}
-                        onChange={(e) => setPrice(Number(e.target.value))}
+                        value={onChangePrice ? price : obj.price}
+                        onChange={(e) => {
+                          setOnChangePrice(true);
+                          setPrice(Number(e.target.value));
+                        }}
                         type="text"
                         name="price"
                         id="price"
