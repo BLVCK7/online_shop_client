@@ -6,7 +6,6 @@ import DeviceInfo from '../pages/DeviceInfo.jsx';
 import {
   ADMIN_ROUTE,
   BASKET_ROUTE,
-  CATEGORY_ROUTE,
   DEVICE_ROUTE,
   LOGIN_ROUTE,
   REGISTRATION_ROUTE,
@@ -40,9 +39,5 @@ export const publicRoutes = [
   {
     path: DEVICE_ROUTE + '/:id',
     Component: DeviceInfo,
-  },
-  {
-    path: CATEGORY_ROUTE + '/:id',
-    Component: Shop,
   },
 ];
