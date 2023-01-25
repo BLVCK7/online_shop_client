@@ -61,6 +61,7 @@ function App() {
         <Route path={LOGIN_ROUTE} element={<Auth />} />
         <Route path={REGISTRATION_ROUTE} element={<Auth />} />
         <Route path={DEVICE_ROUTE + '/:id'} element={<DeviceInfo />} />
+        <Route path={'test'} element={<Test />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>

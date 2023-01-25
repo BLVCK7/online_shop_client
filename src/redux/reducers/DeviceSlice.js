@@ -36,6 +36,7 @@ export const setAdminDeviceInfoEditThunk = createAsyncThunk(
 
 const initialState = {
   allDevices: [],
+  typeDevices: [],
   device: [],
   status: 'loading',
   editDevice: [],
@@ -45,9 +46,10 @@ export const DeviceSlice = createSlice({
   name: 'device',
   initialState,
   reducers: {
-    // setNameAction(state, action) {
-    //   state.editDevice = action.payload;
-    // },
+    setTypeDevices(state, action) {
+      state.typeDevices = action.payload;
+      state.allDevices = [];
+    },
   },
   extraReducers: {
     // setDivicesThunk
@@ -88,5 +90,7 @@ export const DeviceSlice = createSlice({
     },
   },
 });
+
+export const { setTypeDevices } = DeviceSlice.actions;
 
 export default DeviceSlice.reducer;

@@ -6,12 +6,13 @@ import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/rea
 import { getTypes } from '../http/typeAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import { TypeSlice } from '../redux/reducers/TypeSlice';
-import { Link, Outlet, redirect, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { BrandSlice } from '../redux/reducers/BrandSlice';
 import { getBrand } from '../http/brandAPI';
 import Pagination from '../components/Pagination';
 import { sortOptions } from '../utils/consts';
-import { useCallback } from 'react';
+import axios from 'axios';
+import { setTypeDevices } from '../redux/reducers/DeviceSlice';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -22,46 +23,22 @@ export default function Shop() {
   const dispatch = useDispatch();
   const { type } = useSelector((state) => state.typeReducer);
   const { brand } = useSelector((state) => state.brandReducer);
+
+  const [temporary, setTemporary] = React.useState([]);
+  console.log('temporary data', temporary);
+
   const { setTypes } = TypeSlice.actions;
   const { setBrand } = BrandSlice.actions;
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [activeSort, setActiveSort] = React.useState('Сначала популярные');
-  const [checked, setChecked] = React.useState([]);
-  const [url, setUrl] = React.useState('');
+
   let location = useLocation();
-  let locationUrl = location.pathname + location.search;
 
   React.useEffect(() => {
     getTypes().then((data) => dispatch(setTypes(data)));
     getBrand().then((data) => dispatch(setBrand(data)));
   }, []);
-
-  console.log(findUrl(checked)); // приходит правильная ссылка, нужно ее как-то впихнуть в navigate или во что-то другое
-
-  function findUrl(arr) {
-    let obj = arr.map((elem) => Object.values(elem.path).join(''));
-    if (obj.length !== 0) {
-      if (locationUrl.includes('/device?')) {
-        let haveCat = locationUrl + '&' + obj.join('&');
-        return haveCat;
-      }
-      let word = locationUrl + 'device?' + obj.join('&');
-      return word;
-    }
-    return locationUrl;
-  }
-
-  const onSelectBrand = (id) => {
-    setChecked((prev) => {
-      if (checked.find((e) => e.id === id)) {
-        let newarr = checked.filter((a) => a.id !== id);
-        return newarr;
-      } else {
-        return [...prev, { id: id, path: `brandId=${id}` }].sort((a, b) => a.id - b.id);
-      }
-    });
-  };
 
   return (
     <div className="bg-white">
@@ -106,8 +83,8 @@ export default function Shop() {
                     <h3 className="sr-only">Категории</h3>
                     <ul role="list" className="px-2 py-3 font-medium text-gray-900">
                       {type.map((category) => (
-                        <Link to={`/device?typeId=${category.id}`}>
-                          <li key={category.id}>
+                        <Link key={category.id} to={`/device?typeId=${category.id}`}>
+                          <li>
                             <span className="block px-2 py-3">{category.name}</span>
                           </li>
                         </Link>
@@ -222,6 +199,7 @@ export default function Shop() {
             </div>
           </div>
 
+          {/* Desktop section */}
           <section aria-labelledby="products-heading" className="pt-6 pb-24">
             <h2 id="products-heading" className="sr-only">
               Products
@@ -235,8 +213,15 @@ export default function Shop() {
                   role="list"
                   className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
                   {type.map((category) => (
-                    <Link to={`/device?typeId=${category.id}`}>
-                      <li key={category.id}>
+                    <Link
+                      onClick={() =>
+                        axios
+                          .get(`http://localhost:5000/api/device?typeId=${category.id}`)
+                          .then((res) => dispatch(setTypeDevices(res.data.rows)))
+                      }
+                      key={category.id}
+                      to={`/device?typeId=${category.id}`}>
+                      <li>
                         <span className="block px-2 py-3">{category.name}</span>
                       </li>
                     </Link>
@@ -260,22 +245,17 @@ export default function Shop() {
                       </h3>
                       <Disclosure.Panel className="pt-6">
                         <div className="space-y-4">
-                          {brand.map((option, optionIdx) => (
+                          {brand.map((option) => (
                             <div key={option.id} className="flex items-center">
                               <input
-                                id={`filter-brands-${optionIdx}`}
+                                value={option.id}
                                 name="brands"
                                 defaultValue={option.value}
                                 type="checkbox"
                                 defaultChecked={option.checked}
                                 className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                onChange={() => onSelectBrand(option.id)}
                               />
-                              <label
-                                htmlFor={`filter-brands-${optionIdx}`}
-                                className="ml-3 text-sm text-gray-600">
-                                {option.name}
-                              </label>
+                              <label className="ml-3 text-sm text-gray-600">{option.name}</label>
                             </div>
                           ))}
                         </div>

@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const products = [
   {
@@ -28,17 +30,26 @@ const products = [
 ];
 
 const Basket = () => {
+  const { user } = useSelector((state) => state.userReducer);
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    axios
+      .post('http://localhost:5000/api/basket', { userid: user.id })
+      .then((res) => setData(res.data));
+  }, []);
+
   return (
     <div className="flex flex-col px-10">
       <h1 className="text-center font-bold text-black text-2xl my-10">Корзина товаров</h1>
       <div className="md:px-60 md:mt-5">
         <ul role="list" className="-my-6 divide-y divide-gray-200">
-          {products.map((product) => (
+          {data.map((product) => (
             <li key={product.id} className="flex py-6">
               <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                 <img
-                  src={product.imageSrc}
-                  alt={product.imageAlt}
+                  src={process.env.REACT_APP_API_URL + product.device.img}
+                  alt={product.device.img}
                   className="h-full w-full object-cover object-center"
                 />
               </div>
@@ -47,14 +58,13 @@ const Basket = () => {
                 <div>
                   <div className="flex justify-between text-base font-medium text-gray-900">
                     <h3>
-                      <a href={product.href}>{product.name}</a>
+                      <a href={product.href}>{product.device.name}</a>
                     </h3>
-                    <p className="ml-4">{product.price}</p>
+                    <p className="ml-4">{product.device.price + 'р.'}</p>
                   </div>
-                  <p className="mt-1 text-sm text-gray-500">{product.color}</p>
                 </div>
                 <div className="flex flex-1 items-end justify-between text-sm">
-                  <p className="text-gray-500">Qty {product.quantity}</p>
+                  <p className="text-gray-500">Qty</p>
 
                   <div className="flex">
                     <button

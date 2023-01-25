@@ -18,6 +18,7 @@ import {
 } from '../utils/consts';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserSlice } from '../redux/reducers/UserSlice';
+import { setDivicesThunk } from '../redux/reducers/DeviceSlice';
 
 const solutions = [
   {
@@ -59,7 +60,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
           {/* Logo */}
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <Link to="/">
+            <Link reloadDocument to="/">
               <span className="sr-only">Your Company</span>
               <img
                 className="h-8 w-auto sm:h-10"
