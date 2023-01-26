@@ -15,10 +15,6 @@ export default function ProductList() {
     dispatch(setDivicesThunk());
   }, []);
 
-  React.useEffect(() => {
-    console.log(location);
-  }, [location.search]);
-
   if (status === 'loading')
     return <div className="flex justify-center items-center m-auto">Loading...</div>;
 

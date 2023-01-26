@@ -80,6 +80,7 @@ export default function Navbar() {
             </Popover.Button>
           </div>
 
+          {/* Desktop */}
           {isAuth && (
             <>
               <Link
@@ -121,6 +122,7 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Mobile */}
       {isAuth ? (
         <div
           className={`${
@@ -175,6 +177,7 @@ export default function Navbar() {
                   Корзина
                 </span>
               </Link>
+
               <button
                 onClick={onLogout}
                 to={LOGIN_ROUTE}

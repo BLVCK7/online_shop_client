@@ -12,8 +12,8 @@ const ProductListAll = () => {
       </h2>
       <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
         {allDevices.map((product) => (
-          <div className="flex flex-col">
-            <Link reloadDocument key={product.id} to={'device/' + product.id}>
+          <div key={product.id} className="flex flex-col">
+            <Link reloadDocument to={'device/' + product.id}>
               <div className="group relative">
                 <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80">
                   <img
@@ -36,7 +36,7 @@ const ProductListAll = () => {
                 </div>
               </div>
             </Link>
-            <ProductButton allDevices={allDevices} />
+            <ProductButton deviceidAllProducts={product.id} />
           </div>
         ))}
       </div>

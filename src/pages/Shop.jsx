@@ -6,7 +6,7 @@ import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/rea
 import { getTypes } from '../http/typeAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import { TypeSlice } from '../redux/reducers/TypeSlice';
-import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { BrandSlice } from '../redux/reducers/BrandSlice';
 import { getBrand } from '../http/brandAPI';
 import Pagination from '../components/Pagination';
@@ -20,20 +20,17 @@ function classNames(...classes) {
 
 export default function Shop() {
   const navigate = useNavigate();
+  let location = useLocation();
   const dispatch = useDispatch();
+
   const { type } = useSelector((state) => state.typeReducer);
   const { brand } = useSelector((state) => state.brandReducer);
-
-  const [temporary, setTemporary] = React.useState([]);
-  console.log('temporary data', temporary);
 
   const { setTypes } = TypeSlice.actions;
   const { setBrand } = BrandSlice.actions;
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [activeSort, setActiveSort] = React.useState('Сначала популярные');
-
-  let location = useLocation();
 
   React.useEffect(() => {
     getTypes().then((data) => dispatch(setTypes(data)));
