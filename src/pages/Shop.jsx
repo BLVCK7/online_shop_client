@@ -13,6 +13,7 @@ import Pagination from '../components/Pagination';
 import { sortOptions } from '../utils/consts';
 import axios from 'axios';
 import { setTypeDevices } from '../redux/reducers/DeviceSlice';
+import { useGetBrandedDevicesQuery } from '../redux/services/userApi';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -25,6 +26,9 @@ export default function Shop() {
 
   const { type } = useSelector((state) => state.typeReducer);
   const { brand } = useSelector((state) => state.brandReducer);
+  const { data: brandData, isLoading: isLoadingTypes } = useGetBrandedDevicesQuery(location.search);
+
+  console.log(location.search);
 
   const { setTypes } = TypeSlice.actions;
   const { setBrand } = BrandSlice.actions;
@@ -34,8 +38,43 @@ export default function Shop() {
 
   React.useEffect(() => {
     getTypes().then((data) => dispatch(setTypes(data)));
-    getBrand().then((data) => dispatch(setBrand(data)));
+    getBrand().then((data) => {
+      dispatch(setBrand(data));
+      setObj(data);
+    });
   }, []);
+
+  const [obj, setObj] = React.useState();
+  const [value, setValue] = React.useState([]);
+
+  React.useEffect(() => {
+    let string = ['device?', ...value].join('brandId=');
+    navigate(string);
+  }, [value]);
+
+  const handlerCheckBox = (e) => {
+    setObj((prev) =>
+      prev.map((item) =>
+        (item.id === Number(e.target.id)) & (item.checked === false || item.checked === undefined)
+          ? { ...item, checked: true }
+          : (item.id === Number(e.target.id)) & (item.checked === true)
+          ? { ...item, checked: false }
+          : { ...item },
+      ),
+    );
+
+    if (!obj.find((item) => (item.checked === true) & (item.id === Number(e.target.id)))) {
+      setValue((prev) => [...prev, Number(e.target.id) + '&'].sort((a, b) => a.localeCompare(b)));
+    } else {
+      setValue(
+        value.filter((f) => f !== Number(e.target.id) + '&').sort((a, b) => a.localeCompare(b)),
+      );
+    }
+  };
+
+  console.log(obj);
+  console.log(value);
+  console.log('brand', brandData);
 
   return (
     <div className="bg-white">
@@ -245,14 +284,16 @@ export default function Shop() {
                           {brand.map((option) => (
                             <div key={option.id} className="flex items-center">
                               <input
-                                value={option.id}
-                                name="brands"
-                                defaultValue={option.value}
+                                name={option.name}
                                 type="checkbox"
+                                id={option.id}
                                 defaultChecked={option.checked}
+                                onChange={(e) => handlerCheckBox(e)}
                                 className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                               />
-                              <label className="ml-3 text-sm text-gray-600">{option.name}</label>
+                              <label htmlFor={option.id} className="ml-3 text-sm text-gray-600">
+                                {option.name}
+                              </label>
                             </div>
                           ))}
                         </div>

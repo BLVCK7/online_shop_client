@@ -1,20 +1,28 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import userReducer from './reducers/UserSlice';
 import typeReducer from './reducers/TypeSlice';
 import brandReducer from './reducers/BrandSlice';
 import deviceReducer from './reducers/DeviceSlice';
 import basketReducer from './reducers/BasketSlice';
 
-const rootReducer = combineReducers({
-  userReducer,
-  typeReducer,
-  brandReducer,
-  deviceReducer,
-  basketReducer,
+import { configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import { applicationApi } from '../redux/services/userApi';
+
+export const store = configureStore({
+  reducer: {
+    // Add the generated reducer as a specific top-level slice
+    [applicationApi.reducerPath]: applicationApi.reducer,
+    userReducer,
+    typeReducer,
+    brandReducer,
+    deviceReducer,
+    basketReducer,
+  },
+  // Adding the api middleware enables caching, invalidation, polling,
+  // and other useful features of `rtk-query`.
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(applicationApi.middleware),
 });
 
-export const setupStore = () => {
-  return configureStore({
-    reducer: rootReducer,
-  });
-};
+// optional, but required for refetchOnFocus/refetchOnReconnect behaviors
+// see `setupListeners` docs - takes an optional callback as the 2nd arg for customization
+setupListeners(store.dispatch);
